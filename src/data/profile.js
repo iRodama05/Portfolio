@@ -25,7 +25,7 @@
 export const profile = {
   alias: 'iRodamaa',
   kanji: '力',
-  version: '0.2.1',
+  version: '0.2.2',
   year: 2026,
   available: true,
   mottoJa: '論理と美しさのために',
