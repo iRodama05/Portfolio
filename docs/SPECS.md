@@ -28,14 +28,14 @@ Especificación funcional del sitio. Define qué contiene cada sección, cómo s
 | `/:lang/projects/:slug` | Home de fondo + **visor de proyecto** abierto (ver §3.3). |
 | `/:lang/windows` | Home con scroll a la sección 03. |
 | `/:lang/windows/:slug` | Home de fondo + **ventana** abierta (ver §4). |
-| Cualquier otra | Panel `404` dentro del mismo sistema de paneles, con enlace a la home. |
+| Cualquier otra (o `slug` inexistente) | Vista `00 // 404` inline en `<main>` (ocultando las secciones 01–04), con enlace a `/:lang`. |
 
 Reglas del router:
 
 - Un solo router basado en History API (`pushState` / `popstate`). Nada de rutas con `#!`.
-- La home **siempre** está renderizada debajo. Las rutas `projects/:slug` y `windows/:slug` solo añaden una capa de panel encima.
+- En las rutas válidas de contenido, la home **siempre** está renderizada debajo. Las rutas `projects/:slug` y `windows/:slug` con `slug` existente solo añaden una capa de panel encima.
 - Al entrar por URL directa a `/es/windows/foo`, primero se pinta la home y luego se abre la ventana. Al cerrarla, el usuario queda en `/es` con scroll en la sección 03 (no en el top).
-- Un `slug` inexistente abre el panel `404`, no rompe la home.
+- Una ruta desconocida o un `slug` inexistente renderiza la sección `00 // 404` (`無`) inline en `<main>`, manteniendo la barra de navegación y el footer operativos.
 - Cambiar de idioma conserva la ruta actual: `/es/windows/foo` → `/en/windows/foo`.
 
 ---
@@ -46,20 +46,20 @@ Reglas del router:
 
 - Izquierda: marca (kanji + alias) que enlaza a `/:lang`.
 - Centro: enlaces de ancla `OVERVIEW`, `SHOWROOM`, `WINDOWS`, `MANIFESTO` en mono, mayúsculas, 11–12px, `letter-spacing: 0.12em`. El enlace de la sección visible lleva un indicador activo de 1px en `--accent-torii`.
-- Derecha: chip de versión (`■ v1.0.0`), selector `ES / EN` y CTA primario (contacto).
+- Derecha: chip de versión (`■ vX.Y.Z`, leído desde `profile.version` y gestionado manualmente), selector `ES / EN` y CTA primario (contacto).
 - Borde inferior `1px solid var(--border-grid)`.
-- Móvil (< 768px): los enlaces centrales se colapsan en un botón `+` que abre un panel a pantalla completa con la misma lista. Ese panel usa el mismo gestor de foco que las ventanas.
+- Móvil (< 768px): los enlaces centrales se colapsan en un botón `+` que abre un panel a pantalla completa con la misma lista (`role="dialog"`, trampa de foco `Tab`, cierre con `Esc`, `inert` en el resto de la página y emisión de `panel:open` / `panel:close`).
 
 ### 2.2 Regla vertical de scroll (solo desktop ≥ 1024px)
 
 - Fija en el margen derecho. Marcas graduadas de 1px, una marca larga por cada sección.
 - La marca de la sección activa se alarga y se ilumina a `--text-primary`.
-- Al hacer hover, se despliega un índice con número y nombre de cada sección (`00 COVER`, `01 SHOWROOM`…). Al hacer clic, scroll suave a esa sección.
-- Se oculta mientras hay un panel abierto.
+- Al hacer hover o foco interno, se despliega un índice con número y nombre de cada sección (`01 OVERVIEW`, `02 SHOWROOM`, `03 WINDOWS`, `04 MANIFESTO`). Al hacer clic, scroll suave a esa sección.
+- Se oculta mientras hay un panel o menú móvil abierto.
 
 ### 2.3 Encabezados de sección
 
-Cada sección arranca con una fila mono: `01 // OVERVIEW`, una línea de 1px que llena el ancho, y un kanji a la derecha. Las esquinas de los contenedores clave llevan marcas `⌜ ⌝ ⌞ ⌟`.
+Cada sección arranca con una fila mono: `01 // OVERVIEW`, una línea horizontal de 1px que llena el ancho con una marca `+` superpuesta en su arranque izquierdo, y un kanji a la derecha (`観`, `展`, `窓`, `言`, y `00 // 404` con `無` en la vista no encontrada). Usa `<div>` en `01 // OVERVIEW` y `00 // 404` (donde la sección ya incluye su propio `<h1>`) y `<h2>` en el resto de secciones. Las esquinas de los contenedores de sección y del footer llevan marcas `⌜ ⌝ ⌞ ⌟`.
 
 ---
 
@@ -67,30 +67,29 @@ Cada sección arranca con una fila mono: `01 // OVERVIEW`, una línea de 1px que
 
 ### 3.1 `01 // OVERVIEW` — Hero
 
-**Layout desktop:** dos columnas. Izquierda (≈ 45%) con contenido; derecha con el canvas dithered, que sangra hasta el borde y se funde con `--bg-base` sin borde duro.
+**Layout desktop:** composición asimétrica superpuesta. Izquierda (`min(40%, 36rem)`) con la columna de contenido; derecha (`62vw`, `position: absolute`) con el escenario del canvas dithered, que sangra hasta el borde derecho y se funde suavemente hacia `--bg-base` a la izquierda sin borde duro. Detrás del canvas se renderiza un fondo arquitectónico sutil (`aria-hidden="true"`): un trazo circular orbital SVG (`--hero-orbit`) y el kanji monumental `京` solo con contorno (`--hero-kanji`).
 
 **Contenido (columna izquierda, en orden):**
 
-1. Línea de estado mono: `力 · ALIAS · DISPONIBLE PARA PROYECTOS`. Un punto `--accent-torii` indica disponibilidad.
-2. Titular serif grande con el nombre/alias.
-3. Subtítulo bilingüe: japonés + traducción en *italic*.
+1. Línea de estado mono: `力 · ALIAS · DISPONIBLE PARA PROYECTOS`. Un punto `--accent-torii` indica disponibilidad (`--text-muted` cuando no está disponible).
+2. Titular serif grande con el nombre/alias (`<h1>`).
+3. Subtítulo bilingüe: japonés (`--font-jp`) + traducción en *italic* serif.
 4. **Tabla de specs** clave-valor. Cada fila tiene la etiqueta mono en mayúsculas a la izquierda y el valor a la derecha, separada por `1px solid var(--border-grid)`. Ejemplo de filas: `ROL`, `STACK`, `UBICACIÓN`, `ENFOQUE`. Viene de `src/data/profile.js`.
 5. **Rejilla de métricas** de 4 celdas con bordes de 1px: número grande + etiqueta mono (p. ej. `PROYECTOS`, `VENTANAS`, `AÑOS`, `COMMITS`). `PROYECTOS` y `VENTANAS` se calculan a partir de los registros, no se escriben a mano.
-6. Dos CTA: primario `VER SHOWROOM` (salvia sólido) y secundario `ABRIR VENTANAS` (contorno).
-7. Fila de enlaces sociales mono pequeña.
+6. Dos CTA con indicador direccional `>`: primario `VER SHOWROOM >` (salvia sólido) y secundario `ABRIR VENTANAS >` (contorno).
+7. Fila de enlaces sociales mono pequeña (se omite si `profile.socials` está vacío).
 
 **Canvas dithered:**
 
-- Fuente: imagen en escala de grises optimizada a resolución lógica de muestreo (`public/art/torii.webp`, ~400–480px de ancho, < 15 KB). Se convierte a puntos con dithering Bayer 4×4 en el navegador una sola vez y se cachea, muestreando siempre en píxeles CSS lógicos con un techo duro de partículas (`maxDots: 14_000`) para garantizar fluidez en monitores QHD/4K.
+- Fuente del Hero: imagen en escala de grises de alta definición en WebP (`public/images/hero-torii.webp`, 1600×893px, < 100 KB) para preservar detalle fino en pantallas grandes; si la carga fallara, el motor cuenta con un fallback procedural arquitectónico integrado. Se muestrea en la cuadrícula lógica del canvas (`cellSize: 2`, `devicePixelRatio` acotado a 2) aplicando **dithering ordenado Bayer 8×8** en tinta `--dither-ink`, cacheando el buffer estático en un `Uint32Array` para repintados parciales instantáneos.
 - Desktop con puntero fino (`(hover: hover) and (pointer: fine)`):
-  - Los puntos dentro de un radio de influencia (~120px) se desplazan levemente en dirección opuesta al cursor, como viento, y vuelven a su posición con amortiguación.
-  - Su color interpola de `--text-secondary` a `--text-primary`. Solo los puntos más cercanos al centro del cursor toman `--accent-torii`.
-  - Sin cursor encima: deriva ambiental muy lenta con cadencia reducida (~15–20 FPS en reposo, despertando a frame rate nativo al detectar `pointermove`).
-  - Se pausa cuando sale del viewport (`IntersectionObserver`), cuando la pestaña está oculta (`visibilitychange`) y mientras haya cualquier panel o menú móvil a pantalla completa abierto.
-- Móvil, puntero táctil o `prefers-reduced-motion: reduce`: se dibuja **un solo frame estático** y no se registra ningún listener ni `requestAnimationFrame`.
+  - En reposo (sin cursor encima): permanece completamente estático (`0 FPS`, cero consumo de CPU/GPU), manteniendo la quietud visual de la escena hasta que el usuario interactúa.
+  - Al mover el cursor dentro del canvas: los puntos dentro del radio de influencia (`influenceRadius: 176` en el Hero) reaccionan mediante una onda radial sobre el umbral Bayer en el núcleo y una interpolación suave de color desde `--dither-ink` hacia `--text-primary`, encendiendo destellos puntuales (`spark`) en `--accent-torii` cerca del centro del puntero. Al salir el cursor, el efecto se disipa suavemente (~340ms) y el loop `requestAnimationFrame` se detiene por completo.
+  - Se detiene inmediatamente cuando sale del viewport (`IntersectionObserver`), cuando la pestaña está oculta (`visibilitychange`) y mientras haya cualquier panel o menú móvil a pantalla completa abierto (`panel:open` / `panel:close`).
+- Móvil, puntero táctil o `prefers-reduced-motion: reduce`: se dibuja **un solo frame estático** y no se registra ningún listener de puntero ni `requestAnimationFrame`.
 - El canvas lleva `aria-hidden="true"`. La ilustración es decorativa.
 
-**Móvil:** una columna. El canvas estático va arriba, a ~60vh y con máscara degradada inferior, y debajo el contenido.
+**Móvil y tablet (< 1024px):** una columna. El escenario con el canvas estático va arriba (`min-height: 70vh`) con máscara degradada inferior hacia transparente, y debajo el contenido.
 
 ### 3.2 `02 // SHOWROOM` — Carrusel de proyectos
 
@@ -170,7 +169,7 @@ Usa el mismo contenedor de panel que las ventanas (§4.2), en variante `project`
 ### 3.6 Footer
 
 - Fila superior en rejilla: a la izquierda la marca, el lema bilingüe y el chip de versión; a la derecha columnas de enlaces (`EXPLORAR`, `PROYECTOS`, `CONTACTO`).
-- **Watermark:** el alias a ancho completo, en serif gigante solo con contorno (`color: transparent; -webkit-text-stroke: 1px rgba(188, 214, 196, 0.18)`). El tamaño se ajusta con `clamp()` para que llene el ancho sin desbordar. Es decorativo (`aria-hidden`).
+- **Watermark:** el alias a ancho completo, en serif gigante solo con contorno (`color: transparent; -webkit-text-stroke: 1px var(--stroke-watermark)`). Parte de una base proporcional con container query units (`calc(135cqi / var(--mark-chars))`) y se ajusta con precisión al ancho real de tinta mediante `ResizeObserver` (`fitFooterMark`), evitando recortes con alias largos sin desbordar. Es decorativo (`aria-hidden`).
 - Fila inferior mono: `© 2026 ALIAS · 力`, nota sobre el arte dithered y `HECHO DESDE UNA SOLA FUENTE DE VERDAD`.
 
 ---
@@ -233,7 +232,7 @@ Al cerrar, el foco vuelve a la tarjeta que abrió el panel (o al título de la s
 
 ## 5. Contratos de datos
 
-Definidos con JSDoc en `src/data/` y validados por `src/data/validate.js` tanto en desarrollo (consola del navegador) como en el paso de pre-renderizado del build (`scripts/prerender.js`, abortando el despliegue con código de error si falla). Valida unicidad y formato estricto de `slug` (`/^[a-z0-9]+(?:-[a-z0-9]+)*$/`), campos obligatorios por `type`, traducciones `es`/`en` y esquemas permitidos en toda URL (`https:`, `http:`, `mailto:` o rutas locales `/...` que no comiencen con `//`).
+Definidos con JSDoc en `src/data/` y validados por `src/data/validate.js` tanto en desarrollo (consola del navegador) como en el paso de pre-renderizado del build (`scripts/prerender.js`, abortando el despliegue con código de error si falla). Valida unicidad y formato estricto de `slug` (`/^[a-z0-9]+(?:-[a-z0-9]+)*$/`), campos obligatorios por `type`, traducciones `es`/`en` y esquemas permitidos en toda URL (`https:`, `http:`, `mailto:` o rutas relativas locales que empiecen con `/`, `#` o `?`, sin `//` ni `\`).
 
 ### 5.1 `projects.js`
 
@@ -285,9 +284,9 @@ Los metadatos declarativos viven en `windows.meta.js` (importable desde Node en 
 ## 6. Rendimiento, seguridad y criterios de aceptación
 
 - JS inicial (sin ventanas ni notas) ≤ 60 KB gzip. Cada ventana `app`/`utility` y cada nota `.md` se descarga en su propio chunk solo al abrirla.
-- Canvas en desktop: ≥ 55 FPS sostenidos en hardware medio, muestreando en píxeles CSS lógicos con techo `maxDots: 14_000`, `devicePixelRatio` limitado a 2 y pausa automática fuera de viewport o con panel abierto.
+- Canvas en desktop: ≥ 55 FPS sostenidos durante la interacción con el puntero (actualizando únicamente la sub-región sucia `dirty` con `putImageData(frame, 0, 0, rx, ry, rw, rh)`), `0 FPS` en reposo sin cursor, `devicePixelRatio` limitado a 2 y parada inmediata fuera de viewport o con panel/menú abierto.
 - Canvas en móvil: cero frames de animación después del primer pintado.
-- LCP ≤ 2.0s en 4G. Solo las dos fuentes `.woff2` principales llevan `preload`; `torii.webp` (< 15 KB) se carga sin bloquear el renderizado de texto y `pine.webp` se difiere hasta acercarse a la sección 04.
+- LCP ≤ 2.0s en 4G. Solo las dos fuentes `.woff2` principales llevan `preload`; `hero-torii.webp` (< 100 KB, decodificación asíncrona) se carga sin bloquear el renderizado del texto y `pine.webp` (< 15 KB) se difiere hasta acercarse a la sección 04.
 - Seguridad: ninguna URL se inserta ni se abre sin validar su protocolo (`sanitizeUrl`), ningún contenido de usuario o query string se pasa por `innerHTML`, y la producción sirve `Content-Security-Policy` estricta sin `'unsafe-inline'` ni `'unsafe-eval'` en `script-src`.
 - Cada ruta de §1 funciona al entrar por URL directa, al recargar y con Atrás/Adelante.
 - Todo el sitio se puede usar con teclado.

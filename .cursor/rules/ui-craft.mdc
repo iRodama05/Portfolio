@@ -27,24 +27,30 @@ alwaysApply: true
   - `--accent-primary: #A7C4B5;` (Botones principales CTA en salvia claro)
   - `--accent-primary-text: #070B09;` (Texto sobre botón primario)
   - `--accent-torii: #D95338;` (Bermellón Torii: **USO RESTRINGIDO** únicamente a indicadores de estado activo, puntos de notificación o micro-detalles puntuales)
+  - `--dither-ink: #9CB8A4;` (Tinta salvia base para los puntos del arte dithered en `<canvas>`)
+  - `--hero-orbit: rgba(188, 214, 196, 0.05);` (Trazo del anillo orbital decorativo del hero)
+  - `--hero-kanji: rgba(188, 214, 196, 0.04);` (Contorno del kanji monumental de fondo en el hero)
+  - `--stroke-watermark: rgba(188, 214, 196, 0.18);` (Contorno del watermark tipográfico del footer)
 
 ## 3. REJILLA ARQUITECTÓNICA Y DETALLES DE INSTRUMENTACIÓN
 - La estructura visual se construye mediante **líneas divisoras de `1px solid var(--border-grid)`** (horizontal y vertical), compartimentando navegación, tablas clave-valor, métricas y secciones.
 - Incluir marcas de registro técnicas (`⌜`, `⌝`, `⌞`, `⌟`, `+`) en las esquinas de contenedores visuales clave y encabezados numerados (`01 // OVERVIEW`, `02 // SHOWROOM`, `03 // WINDOWS`, `04 // MANIFESTO`).
 - Mantener una regla vertical graduada fija en el margen derecho en desktop como indicador visual de progreso de scroll.
-- Footer con firma de marca/alias a ancho completo en tipografía gigante solo con contorno (`color: transparent; -webkit-text-stroke: 1px rgba(188, 214, 196, 0.18);`).
+- Footer con firma de marca/alias a ancho completo en tipografía gigante solo con contorno (`color: transparent; -webkit-text-stroke: 1px var(--stroke-watermark);`).
 
-## 4. SISTEMA TIPOGRÁFICO DUAL
+## 4. SISTEMA TIPOGRÁFICO
 - **Títulos y citas editoriales (`--font-editorial`):** `'Instrument Serif', 'Cormorant Garamond', Georgia, serif`.
   - Tracking negativo en titulares grandes (`letter-spacing: -0.025em`), interlineado compacto (`line-height: 1.05`).
   - Subtítulos poéticos o bilingües (japonés + español/inglés) en estilo *italic*.
-- **Interfaz, navegación, metadatos y código (`--font-mono`):** `'JetBrains Mono', 'IBM Plex Mono', monospace`.
+- **Interfaz, navegación, metadatos y código (`--font-mono`):** `'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace`.
   - Etiquetas de navegación, tablas de especificaciones y categorías en mayúsculas (`text-transform: uppercase`), tamaño `11px–12px` y espaciado amplio (`letter-spacing: 0.12em`).
+- **Caracteres japoneses y kanji (`--font-jp`):** `'Yu Gothic', 'YuGothic', 'Hiragino Sans', 'Noto Sans JP', sans-serif`.
+  - Empleado en marcas kanji, subtítulos en japonés (`lang="ja"`) y detalles monumentales de fondo.
 
 ## 5. ARTE DITHERED INTERACTIVO (`<canvas>`) Y COMPONENTES MODULARES
-- Las ilustraciones (arcos *torii*, techos de templos de Kyoto, pinos/bambú) deben renderizarse con estética de trama punteada (*Bayer / Halftone dithering*) fundida sin bordes duros contra `--bg-base`.
-- **Interactividad del Canvas:** Al acercar el cursor, los puntos dentro del radio de influencia reaccionan suavemente (desplazamiento sutil tipo viento y transición de color hacia `--text-primary` o `--accent-torii`). Respetar siempre `@media (prefers-reduced-motion: reduce)` y optimizar FPS para dispositivos móviles.
-- **Escalabilidad Data-Driven:** El carrusel Showroom y el lanzador de Ventanas (`WINDOWS`) deben renderizarse dinámicamente desde registros de datos centralizados (`projects.data.js`, `windows.registry.js`) sin hardcodear bloques HTML repetitivos.
+- Las ilustraciones (arcos *torii*, techos de templos de Kyoto, pinos/bambú) deben renderizarse con estética de trama punteada ordenada (*Bayer 8×8 dithering*) en tinta `--dither-ink` fundida sin bordes duros contra `--bg-base`.
+- **Interactividad del Canvas:** En reposo permanece estático (`0 FPS`); al acercar el cursor en dispositivos con puntero fino, los puntos dentro del radio de influencia reaccionan suavemente (onda radial sobre el umbral Bayer y transición cromática hacia `--text-primary` con destellos puntuales en `--accent-torii`). Respetar siempre `@media (prefers-reduced-motion: reduce)` y dibujar un único frame estático sin listeners en dispositivos táctiles/móviles.
+- **Escalabilidad Data-Driven:** El carrusel Showroom y el lanzador de Ventanas (`WINDOWS`) deben renderizarse dinámicamente desde registros de datos centralizados (`src/data/projects.js`, `src/data/windows.meta.js` y `src/data/windows.js`) sin hardcodear bloques HTML repetitivos.
 
 ## 6. ESTADOS INTERACTIVOS Y ACCESIBILIDAD
 - Todo elemento interactivo (enlaces, botones, miniaturas del carrusel, tarjetas de ventanas) debe definir `:hover`, `:active` y `:focus-visible`.

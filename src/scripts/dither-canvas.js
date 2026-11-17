@@ -120,8 +120,7 @@ function sampleImage(image, cols, rows, wide) {
   const ctx = scratch.getContext('2d', { willReadFrequently: true })
   const field = new Float32Array(cols * rows)
   if (!ctx) return field
-  ctx.fillStyle = '#000'
-  ctx.fillRect(0, 0, cols, rows)
+  ctx.clearRect(0, 0, cols, rows)
   const iw = image.naturalWidth || cols
   const ih = image.naturalHeight || rows
   const scale = Math.max(cols / iw, rows / ih)

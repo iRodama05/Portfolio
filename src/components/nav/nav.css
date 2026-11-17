@@ -39,8 +39,10 @@
 
 .nav__brand:active,
 .nav__link:active,
-.nav__toggle:active {
+.nav__toggle:active,
+.nav__lang-link:active {
   background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .nav__kanji {

@@ -25,21 +25,21 @@
 export const profile = {
   alias: 'iRodamaa',
   kanji: '力',
-  version: '0.2.0',
+  version: '0.2.1',
   year: 2026,
   available: true,
-  mottoJa: '静けさの構造',
+  mottoJa: '論理と美しさのために',
   motto: {
-    es: 'La estructura del silencio.',
-    en: 'The structure of silence.',
+    es: 'Por la lógica y el buen diseño。',
+    en: 'For the sake of logic and good design。',
   },
   email: '',
   /** @type {SpecEntry[]} */
   specs: [
     { id: 'role', value: { es: 'Ingeniero de software', en: 'Software engineer' } },
-    { id: 'stack', value: 'JavaScript' },
-    { id: 'location', value: { es: '', en: '' } },
-    { id: 'focus', value: { es: 'Interfaz y herramientas', en: 'Interface and tools' } },
+    { id: 'stack', value: 'JS · React · Node.js · Python · PostgreSQL' },
+    { id: 'location', value: { es: 'Querétaro, México', en: 'Querétaro, Mexico' } },
+    { id: 'focus', value: { es: 'Desarrollo web full-stack y APIs', en: 'Full-stack web & API systems' } },
   ],
   /** @type {HeroMetrics} */
   metrics: {

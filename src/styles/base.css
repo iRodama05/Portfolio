@@ -64,6 +64,11 @@ button {
   color: var(--bg-base);
 }
 
+.skip-link:active {
+  background: var(--accent-primary);
+  color: var(--accent-primary-text);
+}
+
 #panel-root:empty {
   display: none;
 }

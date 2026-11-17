@@ -110,7 +110,7 @@ export function renderHero(root, { lang }) {
   const canvas = root.querySelector('canvas')
   if (!(canvas instanceof HTMLCanvasElement)) return
   art = createDitherCanvas(canvas, {
-    src: '/images/hero-torii.png',
+    src: '/images/hero-torii.webp',
     cellSize: 2,
     influenceRadius: 176,
     lazy: false,
