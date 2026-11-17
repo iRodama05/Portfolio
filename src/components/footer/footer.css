@@ -1,0 +1,218 @@
+.site-footer {
+  background: var(--bg-base);
+  container-type: inline-size;
+}
+
+.footer__top {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) repeat(3, minmax(0, 0.85fr));
+  border-bottom: var(--line);
+}
+
+.footer__brand,
+.footer__col {
+  min-width: 0;
+  padding: var(--space-7) var(--gutter) var(--space-8);
+  border-right: var(--line);
+}
+
+.footer__col:last-child {
+  border-right: 0;
+}
+
+.footer__id {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-primary);
+}
+
+.footer__id:hover .footer__alias {
+  color: var(--text-primary);
+}
+
+.footer__kanji {
+  font-family: var(--font-jp);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.footer__alias {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: var(--transition);
+}
+
+.footer__motto {
+  max-width: var(--measure);
+  margin: var(--space-5) 0;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.footer__motto-ja {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  font-family: var(--font-jp);
+  font-size: 0.72em;
+  font-style: normal;
+  letter-spacing: 0.14em;
+}
+
+.footer__col h2 {
+  margin: 0 0 var(--space-4);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.footer__col a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 36px;
+  padding: var(--space-2) 0;
+  border-bottom: var(--line);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.footer__col a:hover,
+.footer__col a:focus-visible {
+  color: var(--text-primary);
+}
+
+.footer__col a:active {
+  color: var(--text-primary);
+}
+
+.footer__literal {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.footer__go {
+  display: inline-block;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.footer__col a:hover .footer__go,
+.footer__col a:focus-visible .footer__go {
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+.footer__col a:hover .footer__go--out,
+.footer__col a:focus-visible .footer__go--out {
+  transform: translate(2px, -2px);
+}
+
+.footer__empty {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+}
+
+.footer__mark {
+  --mark-chars: 8;
+  margin: 0;
+  padding: 0.16em var(--space-2) 0.2em;
+  overflow: visible;
+  color: transparent;
+  font-family: var(--font-editorial);
+  /* 1.35em cubre el ancho medio de Instrument Serif; el ajuste fino lo hace fitFooterMark(). */
+  font-size: calc(135cqi / var(--mark-chars));
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+  text-transform: none;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--stroke-watermark);
+}
+
+.footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  padding: var(--space-4) var(--gutter);
+  border-top: var(--line);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.footer__base p {
+  max-width: 42ch;
+}
+
+
+@media (min-width: 1024px) {
+  .site-footer {
+    padding-right: var(--ruler-w);
+  }
+}
+
+@media (max-width: 900px) {
+  .footer__top {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+    border-right: 0;
+    border-bottom: var(--line);
+  }
+}
+
+@media (max-width: 767px) {
+  .footer__top {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__brand,
+  .footer__col {
+    border-right: 0;
+    border-bottom: var(--line);
+  }
+
+  .footer__col:last-child {
+    border-bottom: 0;
+  }
+
+  .footer__base {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer__mark {
+    letter-spacing: -0.04em;
+  }
+}

@@ -1,0 +1,61 @@
+:root {
+  --bg-base: #070B09;
+  --bg-surface: #0C1310;
+  --bg-surface-hover: #121C18;
+  --border-grid: rgba(188, 214, 196, 0.12);
+  --border-strong: rgba(188, 214, 196, 0.28);
+  --text-primary: #E4ECE6;
+  --text-secondary: #8FA395;
+  --text-muted: #55665B;
+  --accent-primary: #A7C4B5;
+  --accent-primary-text: #070B09;
+  --accent-torii: #D95338;
+  --stroke-watermark: rgba(188, 214, 196, 0.18);
+
+  --font-editorial: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-jp: 'Yu Gothic', 'YuGothic', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+
+  --fs-2xs: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: clamp(1.5rem, 2.4vw, 2.125rem);
+  --fs-xl: clamp(3.25rem, 7.4vw, 6.75rem);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 96px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 0.18s;
+  --transition: all var(--dur-fast) var(--ease-out);
+
+  --line: 1px solid var(--border-grid);
+  --line-strong: 1px solid var(--border-strong);
+  --radius: 0px;
+
+  --nav-h: 64px;
+  --ruler-w: 52px;
+  --gutter: clamp(32px, 3.2vw, 48px);
+  --measure: 60ch;
+
+  --z-ruler: 20;
+  --z-nav: 30;
+  --z-skip: 40;
+  --z-menu: 50;
+  --z-panel: 60;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --nav-h: 56px;
+  }
+}

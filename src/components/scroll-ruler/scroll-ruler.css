@@ -1,0 +1,129 @@
+.ruler {
+  --scroll: 0;
+  position: fixed;
+  top: var(--nav-h);
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-ruler);
+  display: none;
+  width: var(--ruler-w);
+  transition: var(--transition);
+}
+
+.ruler__ticks,
+.ruler__spine,
+.ruler__progress {
+  position: absolute;
+  top: var(--space-4);
+  right: 18px;
+  bottom: var(--space-4);
+  pointer-events: none;
+}
+
+.ruler__ticks {
+  width: 8px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--border-strong) 0 1px,
+    transparent 1px 8px
+  );
+}
+
+.ruler__spine,
+.ruler__progress {
+  width: 1px;
+}
+
+.ruler__spine {
+  background: var(--border-grid);
+}
+
+.ruler__progress {
+  background: var(--text-primary);
+  transform: scaleY(var(--scroll));
+  transform-origin: top center;
+}
+
+.ruler__index {
+  position: absolute;
+  top: 10%;
+  right: 0;
+  bottom: 10%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ruler__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 32px;
+  padding-right: 18px;
+  color: var(--text-secondary);
+}
+
+.ruler__tick {
+  display: block;
+  width: 14px;
+  height: 1px;
+  background: var(--text-muted);
+  transition: var(--transition);
+}
+
+.ruler__label {
+  position: absolute;
+  right: 48px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.ruler__link[aria-current='location'] .ruler__tick {
+  width: 28px;
+  background: var(--text-primary);
+}
+
+.ruler__link[aria-current='location'] .ruler__label,
+.ruler__link:hover .ruler__label,
+.ruler__link:focus-visible .ruler__label {
+  color: var(--text-primary);
+}
+
+.ruler__link:hover .ruler__tick,
+.ruler__link:focus-visible .ruler__tick,
+.ruler__link:active .ruler__tick {
+  background: var(--text-primary);
+}
+
+@media (min-width: 1024px) {
+  .ruler {
+    display: block;
+  }
+
+  .ruler:hover,
+  .ruler:focus-within {
+    width: 15rem;
+    background: var(--bg-base);
+    border-left: var(--line);
+  }
+
+  .ruler:hover .ruler__label,
+  .ruler:focus-within .ruler__label {
+    opacity: 1;
+  }
+
+  body.has-overlay .ruler,
+  .ruler.is-suppressed {
+    display: none;
+  }
+}
