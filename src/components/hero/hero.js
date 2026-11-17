@@ -85,9 +85,11 @@ function markup(lang) {
     </div>
     <div class="hero__stage">
       <div class="hero__field" aria-hidden="true">
-        <svg class="hero__orbit" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
-        </svg>
+        <div class="hero__orbit-clip">
+          <svg class="hero__orbit" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+          </svg>
+        </div>
         <span class="hero__kanji" lang="ja">京</span>
       </div>
       <canvas aria-hidden="true"></canvas>

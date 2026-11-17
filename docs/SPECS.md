@@ -67,7 +67,7 @@ Cada sección arranca con una fila mono: `01 // OVERVIEW`, una línea horizontal
 
 ### 3.1 `01 // OVERVIEW` — Hero
 
-**Layout desktop:** composición asimétrica superpuesta. Izquierda (`min(40%, 36rem)`) con la columna de contenido; derecha (`62vw`, `position: absolute`) con el escenario del canvas dithered, que sangra hasta el borde derecho y se funde suavemente hacia `--bg-base` a la izquierda sin borde duro. Detrás del canvas se renderiza un fondo arquitectónico sutil (`aria-hidden="true"`): un trazo circular orbital SVG (`--hero-orbit`) y el kanji monumental `京` solo con contorno (`--hero-kanji`).
+**Layout desktop:** composición asimétrica superpuesta. Izquierda (`min(40%, 36rem)`) con la columna de contenido; derecha (`62vw`, `position: absolute`) con el escenario del canvas dithered, que sangra hasta el borde derecho y se funde suavemente hacia `--bg-base` a la izquierda sin borde duro. Detrás del canvas se renderiza un fondo arquitectónico (`aria-hidden="true"`), legible en los huecos del dither: un trazo circular orbital SVG (`--hero-orbit`) y el kanji monumental `京` solo con contorno (`--hero-kanji`), más tenue que el anillo. En desktop el anillo se recorta en el ancho de la regla de scroll (`--ruler-w`) para no cruzarla, y el kanji se desplaza ese mismo ancho hacia la izquierda. Los alfas viven en `.cursor/rules/ui-craft.mdc`.
 
 **Contenido (columna izquierda, en orden):**
 

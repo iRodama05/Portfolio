@@ -192,6 +192,12 @@
   user-select: none;
 }
 
+.hero__orbit-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
 .hero__orbit {
   position: absolute;
   top: 6%;
@@ -295,6 +301,14 @@
     min-height: 0;
     margin: 0;
     border: 0;
+  }
+
+  .hero__orbit-clip {
+    clip-path: inset(0 var(--ruler-w) 0 0);
+  }
+
+  .hero__kanji {
+    right: calc(var(--ruler-w) + 0.04em - 50px);
   }
 
   .hero__stage::after {

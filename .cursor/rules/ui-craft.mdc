@@ -28,8 +28,8 @@ alwaysApply: true
   - `--accent-primary-text: #070B09;` (Texto sobre botón primario)
   - `--accent-torii: #D95338;` (Bermellón Torii: **USO RESTRINGIDO** únicamente a indicadores de estado activo, puntos de notificación o micro-detalles puntuales)
   - `--dither-ink: #9CB8A4;` (Tinta salvia base para los puntos del arte dithered en `<canvas>`)
-  - `--hero-orbit: rgba(188, 214, 196, 0.05);` (Trazo del anillo orbital decorativo del hero)
-  - `--hero-kanji: rgba(188, 214, 196, 0.04);` (Contorno del kanji monumental de fondo en el hero)
+  - `--hero-orbit: rgba(188, 214, 196, 0.22);` (Trazo del anillo orbital decorativo del hero)
+  - `--hero-kanji: rgba(188, 214, 196, 0.16);` (Contorno del kanji monumental de fondo en el hero)
   - `--stroke-watermark: rgba(188, 214, 196, 0.18);` (Contorno del watermark tipográfico del footer)
 
 ## 3. REJILLA ARQUITECTÓNICA Y DETALLES DE INSTRUMENTACIÓN
