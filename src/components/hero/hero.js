@@ -112,7 +112,7 @@ export function renderHero(root, { lang }) {
   art = createDitherCanvas(canvas, {
     src: '/images/hero-torii.png',
     cellSize: 2,
-    influenceRadius: 130,
+    influenceRadius: 176,
     lazy: false,
     interactive: 'auto',
   })

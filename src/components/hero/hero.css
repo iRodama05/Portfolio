@@ -290,4 +290,16 @@
     margin: 0;
     border: 0;
   }
+
+  .hero__stage::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4.5rem;
+    pointer-events: none;
+    background: linear-gradient(to right, var(--bg-base) 0%, transparent 100%);
+  }
 }

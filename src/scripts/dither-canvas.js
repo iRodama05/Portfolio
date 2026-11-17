@@ -127,8 +127,9 @@ function sampleImage(image, cols, rows, wide) {
   const scale = Math.max(cols / iw, rows / ih)
   const dw = iw * scale
   const dh = ih * scale
+  const drop = 14
   ctx.imageSmoothingEnabled = true
-  ctx.drawImage(image, (cols - dw) / 2, rows - dh, dw, dh)
+  ctx.drawImage(image, (cols - dw) / 2, rows - dh + drop, dw, dh)
   const data = ctx.getImageData(0, 0, cols, rows).data
   let sum = 0
   let count = 0
@@ -311,6 +312,9 @@ export function createDitherCanvas(canvas, options) {
   let cursor = null
   /** @type {{ x: number, y: number, w: number, h: number } | null} */
   let dirty = null
+  let hold = 1
+  let leaving = false
+  let lastNow = 0
   /** @type {ResizeObserver | null} */
   let resizeObserver = null
   /** @type {IntersectionObserver | null} */
@@ -390,9 +394,21 @@ export function createDitherCanvas(canvas, options) {
     }
   }
 
+  /**
+   * 0 en el borde y 1 en el centro, con pendiente plana en el borde.
+   * Recorre el radio entero para que no quede un anillo de corte.
+   * @param {number} dist
+   */
+  function ring(dist) {
+    const n = dist / radius
+    if (n >= 1) return 0
+    const t = 1 - n
+    return t * t * (3 - 2 * t) * hold
+  }
+
   /** @param {number} time */
   function paintRadius(time) {
-    if (!cursor || !field || !view) return
+    if (!cursor || !field || !view || hold <= 0) return
     const css = cellCss
     const reach = radius / css
     const c0 = Math.max(0, Math.floor(cursor.x / css - reach))
@@ -409,16 +425,32 @@ export function createDitherCanvas(canvas, options) {
         const distSq = dx * dx + dy * dy
         if (distSq >= radiusSq) continue
         const dist = Math.sqrt(distSq)
-        const falloff = 1 - dist / radius
-        const wave = Math.sin(dist * 0.105 - time * 2.5) * 0.16 * falloff * falloff
-        const on = field[rowIndex + col] > bayerOf(col, row) + wave
-        if (!on) {
-          fillCell(view, col, row, 0)
+        const fade = ring(dist)
+        if (fade < 0.02) continue
+        const shade = field[rowIndex + col]
+        const threshold = bayerOf(col, row)
+        const staticOn = shade > threshold
+        // La onda que crea o borra puntos vive solo en el núcleo.
+        const core = fade < 0.55 ? 0 : (fade - 0.55) / 0.45
+        const wave = Math.sin(dist * 0.105 - time * 2.5) * 0.12 * core * core
+        const on = core < 0.04 ? staticOn : shade > threshold + wave
+        if (staticOn && !on) {
+          fillCell(view, col, row, pack(ink, Math.round((1 - core) * 255)))
           continue
         }
-        const spark = dist < 18 && ((col * 5 + row * 3) & 7) === 0
-        const tone = spark ? pack(torii, 255) : mixPack(ink, paper, falloff * falloff * 0.92, 255)
-        fillCell(view, col, row, tone)
+        if (!staticOn && on) {
+          const alpha = Math.round(core * core * 255)
+          if (alpha < 14) continue
+          fillCell(view, col, row, pack(ink, alpha))
+          continue
+        }
+        if (!staticOn) continue
+        const tint = fade * fade * fade
+        if (tint < 0.02) continue
+        const spark = core > 0.72 && dist < 16 && ((col * 5 + row * 3) & 7) === 0
+        fillCell(view, col, row, spark
+          ? mixPack(ink, torii, core * core, 255)
+          : mixPack(ink, paper, tint * 0.8, 255))
       }
     }
   }
@@ -473,6 +505,9 @@ export function createDitherCanvas(canvas, options) {
     }
     dirty = null
     cursor = null
+    hold = 1
+    leaving = false
+    lastNow = 0
   }
 
   function stopLoop() {
@@ -482,12 +517,24 @@ export function createDitherCanvas(canvas, options) {
     markState()
   }
 
+  /** @param {number} now */
   function frameStep(now) {
     raf = 0
-    if (destroyed || !live || !cursor || hidden || overlays > 0 || !visible) {
+    if (destroyed || !live || hidden || overlays > 0 || !visible || !cursor) {
       stopLoop()
       return
     }
+    if (leaving) {
+      const dt = lastNow ? now - lastNow : 16
+      hold = Math.max(0, hold - dt / 340)
+      if (hold <= 0) {
+        stopLoop()
+        return
+      }
+    } else {
+      hold = 1
+    }
+    lastNow = now
     renderHot(now * 0.001)
     raf = requestAnimationFrame(frameStep)
   }
@@ -565,11 +612,15 @@ export function createDitherCanvas(canvas, options) {
     if (event.pointerType === 'touch') return
     const rect = canvas.getBoundingClientRect()
     cursor = { x: event.clientX - rect.left, y: event.clientY - rect.top }
+    leaving = false
+    hold = 1
     kick()
   }
 
   function onPointerLeave() {
-    stopLoop()
+    if (!cursor) return
+    leaving = true
+    kick()
   }
 
   function bindInput() {
