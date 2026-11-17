@@ -1,0 +1,53 @@
+---
+description: Reglas estrictas de diseño UI/UX, tokens CSS y dirección de arte oriental oscura (Kyoto / Hairline Grid / Dithered Art) para portafolio personal.
+globs: ["**/*.html", "**/*.css", "**/*.scss", "**/*.js", "**/*.jsx", "**/*.tsx"]
+alwaysApply: true
+---
+
+# SISTEMA DE DIRECCIÓN DE ARTE — PORTAFOLIO KYOTO DARK
+
+## 1. IDENTIDAD Y PROHIBICIONES ABSOLUTAS (ANTI-AI SLOP)
+- **Atmósfera:** Minimalismo editorial y técnico inspirado en arquitectura tradicional de Kyoto de noche (tinta verde bosque profundo, papel *washi*, paneles *shoji* y detalles bermellón de arcos *torii*).
+- **PROHIBIDO** usar fondos gris neutro genérico (`#121212`), negro puro (`#000000`) o degradados morados/azules/neón.
+- **PROHIBIDO** el uso de esquinas redondeadas (`border-radius > 0px`). Toda la interfaz usa geometría ortogonal estricta (`border-radius: 0px`).
+- **PROHIBIDO** usar sombras difusas pesadas (`box-shadow` con blur amplio) o efectos de `backdrop-filter: blur()` (glassmorphism).
+- **PROHIBIDO** usar emojis como iconos de interfaz. Emplear únicamente iconos SVG vectoriales minimalistas (`1.5px` stroke), caracteres técnicos ASCII (`+`, `⌜`, `⌞`, `↗`) o caracteres kanji puntuales.
+- **PROHIBIDO** centrar párrafos de texto de lectura. Todo texto descriptivo va alineado a la izquierda con ancho máximo de `60ch`.
+
+## 2. PALETA CROMÁTICA Y SUPERFICIES (TOKENS OBLIGATORIOS)
+- Definir y consumir siempre estas variables CSS en `:root`:
+  - `--bg-base: #070B09;` (Fondo principal tinta verde bosque)
+  - `--bg-surface: #0C1310;` (Superficies elevadas, visores y paneles)
+  - `--bg-surface-hover: #121C18;` (Estado hover en filas y tarjetas)
+  - `--border-grid: rgba(188, 214, 196, 0.12);` (Líneas estructurales de rejilla)
+  - `--border-strong: rgba(188, 214, 196, 0.28);` (Bordes activos y marcas de registro)
+  - `--text-primary: #E4ECE6;` (Texto principal papel washi)
+  - `--text-secondary: #8FA395;` (Descripciones y metadatos)
+  - `--text-muted: #55665B;` (Etiquetas inactivas y divisores)
+  - `--accent-primary: #A7C4B5;` (Botones principales CTA en salvia claro)
+  - `--accent-primary-text: #070B09;` (Texto sobre botón primario)
+  - `--accent-torii: #D95338;` (Bermellón Torii: **USO RESTRINGIDO** únicamente a indicadores de estado activo, puntos de notificación o micro-detalles puntuales)
+
+## 3. REJILLA ARQUITECTÓNICA Y DETALLES DE INSTRUMENTACIÓN
+- La estructura visual se construye mediante **líneas divisoras de `1px solid var(--border-grid)`** (horizontal y vertical), compartimentando navegación, tablas clave-valor, métricas y secciones.
+- Incluir marcas de registro técnicas (`⌜`, `⌝`, `⌞`, `⌟`, `+`) en las esquinas de contenedores visuales clave y encabezados numerados (`01 // OVERVIEW`, `02 // SHOWROOM`, `03 // WINDOWS`, `04 // MANIFESTO`).
+- Mantener una regla vertical graduada fija en el margen derecho en desktop como indicador visual de progreso de scroll.
+- Footer con firma de marca/alias a ancho completo en tipografía gigante solo con contorno (`color: transparent; -webkit-text-stroke: 1px rgba(188, 214, 196, 0.18);`).
+
+## 4. SISTEMA TIPOGRÁFICO DUAL
+- **Títulos y citas editoriales (`--font-editorial`):** `'Instrument Serif', 'Cormorant Garamond', Georgia, serif`.
+  - Tracking negativo en titulares grandes (`letter-spacing: -0.025em`), interlineado compacto (`line-height: 1.05`).
+  - Subtítulos poéticos o bilingües (japonés + español/inglés) en estilo *italic*.
+- **Interfaz, navegación, metadatos y código (`--font-mono`):** `'JetBrains Mono', 'IBM Plex Mono', monospace`.
+  - Etiquetas de navegación, tablas de especificaciones y categorías en mayúsculas (`text-transform: uppercase`), tamaño `11px–12px` y espaciado amplio (`letter-spacing: 0.12em`).
+
+## 5. ARTE DITHERED INTERACTIVO (`<canvas>`) Y COMPONENTES MODULARES
+- Las ilustraciones (arcos *torii*, techos de templos de Kyoto, pinos/bambú) deben renderizarse con estética de trama punteada (*Bayer / Halftone dithering*) fundida sin bordes duros contra `--bg-base`.
+- **Interactividad del Canvas:** Al acercar el cursor, los puntos dentro del radio de influencia reaccionan suavemente (desplazamiento sutil tipo viento y transición de color hacia `--text-primary` o `--accent-torii`). Respetar siempre `@media (prefers-reduced-motion: reduce)` y optimizar FPS para dispositivos móviles.
+- **Escalabilidad Data-Driven:** El carrusel Showroom y el lanzador de Ventanas (`WINDOWS`) deben renderizarse dinámicamente desde registros de datos centralizados (`projects.data.js`, `windows.registry.js`) sin hardcodear bloques HTML repetitivos.
+
+## 6. ESTADOS INTERACTIVOS Y ACCESIBILIDAD
+- Todo elemento interactivo (enlaces, botones, miniaturas del carrusel, tarjetas de ventanas) debe definir `:hover`, `:active` y `:focus-visible`.
+- Transiciones rápidas y precisas: `transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);`.
+- En `:hover`, invertir contraste en botones sólidos o iluminar bordes hacia `--border-strong` y desplazar sutilmente indicadores direccionales (`↗`, `>`).
+- En `:focus-visible`, aplicar anillo nítido sin redondeo: `outline: 1px solid var(--accent-torii); outline-offset: 2px;`.
