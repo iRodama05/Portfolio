@@ -6,6 +6,7 @@ import './styles/utilities.css'
 import { sections } from './data/navigation.js'
 import { profile } from './data/profile.js'
 import { renderFooter } from './components/footer/footer.js'
+import { renderHero, unmountHero } from './components/hero/hero.js'
 import { closeMenu, initNav, renderNav } from './components/nav/nav.js'
 import { initScrollRuler, renderScrollRuler, syncScrollRuler } from './components/scroll-ruler/scroll-ruler.js'
 import { sectionHeaderMarkup } from './components/section-header/section-header.js'
@@ -35,6 +36,7 @@ function required(id) {
 }
 
 function renderHome() {
+  unmountHero()
   const missing = document.getElementById('not-found')
   if (missing instanceof HTMLElement) {
     missing.hidden = true
@@ -51,14 +53,18 @@ function renderHome() {
       kanji: section.kanji,
       as: section.id === 'overview' ? 'div' : 'h2',
     })
-    const title = section.id === 'overview'
-      ? `<h1 class="page-title" tabindex="-1">${escapeHtml(profile.alias)}</h1>`
-      : ''
-    el.innerHTML = `${cornerMarksMarkup()}${headerMarkup}${title}<p class="lede">${escapeHtml(t(`sections.${section.id}.lede`))}</p>`
+    if (section.id === 'overview') {
+      el.innerHTML = `${cornerMarksMarkup()}${headerMarkup}<div class="hero"></div>`
+      const hero = el.querySelector('.hero')
+      if (hero instanceof HTMLElement) renderHero(hero, { lang: getLang() })
+      continue
+    }
+    el.innerHTML = `${cornerMarksMarkup()}${headerMarkup}<p class="lede">${escapeHtml(t(`sections.${section.id}.lede`))}</p>`
   }
 }
 
 function renderMissing() {
+  unmountHero()
   for (const section of sections) {
     const el = document.getElementById(section.id)
     if (!(el instanceof HTMLElement)) continue

@@ -10,6 +10,9 @@
   --accent-primary: #A7C4B5;
   --accent-primary-text: #070B09;
   --accent-torii: #D95338;
+  --dither-ink: #9CB8A4;
+  --hero-orbit: rgba(188, 214, 196, 0.05);
+  --hero-kanji: rgba(188, 214, 196, 0.04);
   --stroke-watermark: rgba(188, 214, 196, 0.18);
 
   --font-editorial: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;

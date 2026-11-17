@@ -19,6 +19,27 @@ export const es = {
   ruler: {
     label: 'Secciones',
   },
+  hero: {
+    available: 'Disponible para proyectos',
+    unavailable: 'No disponible',
+    showroom: 'Ver showroom',
+    windows: 'Abrir ventanas',
+    socials: 'Redes',
+    specsLabel: 'Especificaciones',
+    metricsLabel: 'Métricas',
+    specs: {
+      role: 'Rol',
+      stack: 'Stack',
+      location: 'Ubicación',
+      focus: 'Enfoque',
+    },
+    metrics: {
+      projects: 'Proyectos',
+      windows: 'Ventanas',
+      years: 'Años',
+      commits: 'Commits',
+    },
+  },
   sections: {
     overview: {
       lede: 'Interfaz, herramientas y notas sobre una sola rejilla.',
